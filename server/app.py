@@ -79,6 +79,23 @@ class NewsletterByID(Resource):
         )
 
         return response
+    
+    def patch(self, id):
+        record = db.session.get(Newsletter, id)
+
+        for attr in request.form:
+            setattr(record, attr, request.form[attr])
+
+        db.session.commit()
+        return record.to_dict(), 200
+
+    def delete(self, id):
+        record = db.session.get(Newsletter, id)
+
+        db.session.delete(record)
+        db.session.commit()
+
+        return {}, 204
 
 api.add_resource(NewsletterByID, '/newsletters/<int:id>')
 
